@@ -435,17 +435,3 @@ func TestOutboxRepo_SafeStripError(t *testing.T) {
 		})
 	}
 }
-
-func TestOutboxRepo_MarshalEnvelopeJSON(t *testing.T) {
-	t.Parallel()
-	bz, err := MarshalEnvelopeJSON(map[string]string{"tenant_id": "t1", "event_id": "e1"})
-	if err != nil {
-		t.Fatalf("MarshalEnvelopeJSON: %v", err)
-	}
-	if !strings.Contains(string(bz), `"tenant_id":"t1"`) {
-		t.Errorf("envelope JSON does not contain tenant_id: %s", bz)
-	}
-	if !strings.Contains(string(bz), `"event_id":"e1"`) {
-		t.Errorf("envelope JSON does not contain event_id: %s", bz)
-	}
-}

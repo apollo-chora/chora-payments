@@ -111,12 +111,6 @@ func ApplyOperatorContext(ctx context.Context, role AdminRole) context.Context {
 	return ctx
 }
 
-// IsAuditor reports whether the role is the read-only AUDITOR role.
-// Used by the refund handler to return 403 before invoking Stripe.
-func IsAuditor(role AdminRole) bool {
-	return role == RoleAuditor
-}
-
 // CanRefund reports whether the role is permitted to issue refunds.
 // AUDITOR is the only canonical role explicitly forbidden; PLATFORM_OPERATOR
 // + TENANT_ADMIN + OWNER are all permitted.

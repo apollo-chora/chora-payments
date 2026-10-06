@@ -74,31 +74,6 @@ func (s AdminState) IsValid() bool {
 	return false
 }
 
-// AdminStateFromShared collapses the underlying 5-state shared.State FSM
-// (carried verbatim in the SQL `state` column) into the H+ 4-state user
-// surface. Mirrors the SQL CASE in adapter/repo/pg/purchase_history.go;
-// kept in Go too so non-DB callers (in-mem stubs, projection tests) stay
-// consistent with the canonical mapping.
-//
-// `checkout_started` collapses to `failed` per the OpenAPI note: the FE
-// renders in-flight rows as failed once they age out, otherwise they
-// flip to `captured` once the webhook lands.
-func AdminStateFromShared(s string) AdminState {
-	switch s {
-	case "payment_captured":
-		return StateCaptured
-	case "refunded":
-		return StateRefunded
-	case "payment_failed":
-		return StateFailed
-	case "expired":
-		return StateExpired
-	case "checkout_started":
-		return StateFailed
-	}
-	return AdminState("")
-}
-
 // PurchaseHistoryItem is a single row of the cross-aggregate UNION ALL
 // projection. Fields chosen to be a strict superset of the columns the
 // H+ FE renders and the export endpoint streams.

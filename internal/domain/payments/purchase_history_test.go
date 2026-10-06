@@ -119,27 +119,3 @@ func TestFilterCriteria_Validate_RejectsInvalidAggregate(t *testing.T) {
 		t.Error("Validate(invalid aggregate) returned nil; want error")
 	}
 }
-
-func TestAdminStateFromShared_UnknownStateReturnsEmpty(t *testing.T) {
-	t.Parallel()
-	if got := AdminStateFromShared("bogus"); got != AdminState("") {
-		t.Errorf("AdminStateFromShared(bogus) = %q; want empty", got)
-	}
-}
-
-func TestAdminState_FromShared_Maps5StateFSMto4State(t *testing.T) {
-	t.Parallel()
-	cases := map[string]AdminState{
-		"payment_captured": StateCaptured,
-		"payment_failed":   StateFailed,
-		"refunded":         StateRefunded,
-		"expired":          StateExpired,
-		"checkout_started": StateFailed, // collapsed per OpenAPI: in-flight surfaces as failed once it ages out
-	}
-	for src, want := range cases {
-		got := AdminStateFromShared(src)
-		if got != want {
-			t.Errorf("AdminStateFromShared(%q) = %q; want %q", src, got, want)
-		}
-	}
-}

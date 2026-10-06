@@ -119,25 +119,6 @@ func bootstrapBus(ctx context.Context) (eventbus.Bus, func()) {
 	return bus, func() { _ = bus.Close() }
 }
 
-// consumerConfig is the shared durable-consumer tuning for every
-// chora-payments subscriber: at-least-once with a 30s ack window, five
-// delivery attempts, and the canonical _dlq.<subject> dead-letter routing.
-//
-// The dotted event bus subscription id is safe as Name — eventbus sanitises it
-// to a NATS-legal durable name internally.
-func consumerConfig(name, subject string) eventbus.ConsumerConfig {
-	return eventbus.ConsumerConfig{
-		Name:       name,
-		Subject:    subject,
-		MaxDeliver: 5,
-		AckWait:    30 * time.Second,
-		Backoff: []time.Duration{
-			1 * time.Second, 5 * time.Second, 15 * time.Second, 30 * time.Second,
-		},
-		DLQSubject: eventbus.DLQSubject(subject),
-	}
-}
-
 // bootstrapPriceCatalogue resolves the chora-payments Stripe Price ID
 // catalogue per CHO-1760. Env contract:
 //

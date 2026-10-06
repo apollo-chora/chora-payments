@@ -17,7 +17,6 @@ package pg
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -298,20 +297,6 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n]
-}
-
-// MarshalEnvelopeJSON serialises the envelope attribute map as JSON
-// (for the publisher to attach as Pub/Sub message attributes).
-// Returned bytes are empty for a nil envelope.
-func MarshalEnvelopeJSON(env map[string]string) ([]byte, error) {
-	if env == nil {
-		return nil, nil
-	}
-	bz, err := json.Marshal(env)
-	if err != nil {
-		return nil, fmt.Errorf("pg/outbox: marshal envelope: %w", err)
-	}
-	return bz, nil
 }
 
 // SafeStripError trims a common substring from err.Error() that often

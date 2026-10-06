@@ -61,13 +61,3 @@ func TestApplyOperatorContext_DoesNotBypass_OnTenantAdmin(t *testing.T) {
 		t.Errorf("TENANT_ADMIN ctx unexpectedly has RLS bypass")
 	}
 }
-
-func TestIsAuditor_RejectsRefundPath(t *testing.T) {
-	t.Parallel()
-	if !IsAuditor(RoleAuditor) {
-		t.Error("IsAuditor(AUDITOR) = false; want true")
-	}
-	if IsAuditor(RoleTenantAdmin) {
-		t.Error("IsAuditor(TENANT_ADMIN) = true; want false")
-	}
-}
